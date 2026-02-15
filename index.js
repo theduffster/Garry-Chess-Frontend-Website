@@ -40,7 +40,7 @@ function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_t
 
   console.log(gameData)
 
-  fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/", {
+  fetch("Access-Control-Allow-Origin", "https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: gameData
