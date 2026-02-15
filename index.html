@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Garry Chess</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  </head>
+  <body>
+    <main>
+      <div id="sideNav" class="flex-shrink-0 p-3">
+        <ul id="sideNavList" class="list-unstyled ps-0">
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true" style="font-weight: 600; margin-top:1rem; text-decoration: underline;">
+              Home
+            </button>
+            <div class="collapse show" id="home-collapse">
+              <ul id="sideNavChild" class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                <li><a href="#arena" class="link-light rounded">Play Demo</a></li>
+                <li><a href="#about" class="link-light rounded">About</a></li>
+              </ul>
+            </div>
+          </li>
+          <li class="mb-1">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+              White Paper
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div id="pageContent" class="container">
+        <div id="arena" class="flex-container">
+          <h2 id="opponentSelect">Select Your Opponent</h2>
+            <div id="opponetOptions">
+              <select id="gmSelector" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                <option selected>1985–2000 World Champion</option>
+                <option value="1">1972-1975 World Champion</option>
+                <option value="2">2013-2023 World Champion</option>
+                <option value="3">2007-2013 World Champion</option>
+              </select>
+
+              <!-- TODO make create your own
+              <div id="or" >or</div>
+              <a id="createYourOwnURL" href="url">Create Your Own...</a> -->
+
+            </div>
+
+            <div id="chessBoard" style="width: 400px"></div>
+
+            <div id="chessClock" class="flex-container">
+              <div id="whiteClock" class="flex-container">
+                <label id="whiteTimeLabel" style="font-family: sans-serif;">White: </label>
+                <p id="whiteTime" style="font-family: 'Audiowide', sans-serif;">10:00</p>
+              </div>
+              <div id="blackClock" class="flex-container">
+                <label id="blackTimeLabel" style="font-family: sans-serif;">Black: </label>
+                <p id="blackTime" style="font-family: 'Audiowide', sans-serif;">10:00</p>
+              </div>
+            </div>
+
+            <div id="boardStatus">
+              <label>Status:</label>
+              <div id="status"></div>
+              <label>FEN:</label>
+              <div id="fen"></div>
+              <label>PGN:</label>
+              <div id="pgn"></div>
+              <label>UCI:</label>
+              <div id="uci"></div>
+            </div>
+        </div>
+
+        <div id="about">
+        <h1>About</h1>
+        <p>Between 1996 and 1997 regining chess world champion Garry Kasparov played a pair of six-game matches against Deep Blue, a supercomputer developed by IBM. Kasparov would lose the second match, being the first defeat of a reigning world chess champion by a computer under tournament conditions. </p>
+        <p>While this was an important milestone for artificial intelligence and for chess, in playing Kasparov, Deep Blue was mainly relying on brute computational force to evaluate millions of positions and outcomes. Deep Blue was able to match Kasparov's ability, but not his flair. </p>
+        <p> Now, three decades later, artifical intelligence has allowed us to do both. For the first time, anyone can experience not only the ability of a Grandmaster, but their unique approach to the game firsthand. </p>
+        <p> Select your opponent and experience it for yourself above.</p>
+        </div>
+
+        <div id="footer">
+        <!-- TODO
+        <p> Copyright or similar goes here</p>
+        -->
+        </div>
+
+      </div>
+    </main>
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.2/chess.js" integrity="sha384-s3XgLpvmHyscVpijnseAmye819Ee3yaGa8NxstkJVyA6nuDFjt59u1QvuEl/mecz" crossorigin="anonymous"></script>
+  <script src="index.js"></script>
+
+</html>

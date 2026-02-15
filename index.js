@@ -1,0 +1,262 @@
+
+
+var board = null
+var game = new Chess()
+var $status = $('#status')
+var $fen = $('#fen')
+var $pgn = $('#pgn')
+var $uci = $('#uci')
+
+// Formats time from seconds to HH:MM format
+function getClockTime (timeElapsed) {
+
+  var timeLeft = 600 - Math.round(timeElapsed/ 1000);
+
+  const minutes = Math.floor(timeLeft / 60);
+
+  const seconds = timeLeft - minutes * 60;
+
+  // If 0 seconds, ensure double zero is printed
+  if (seconds<10){
+    var clockUpdatedTime = [
+      minutes,
+      "0"+seconds.toString(),
+    ].join(":")
+  }else{
+    var clockUpdatedTime = [
+      minutes,
+      seconds,
+    ].join(":")
+  }
+
+  return clockUpdatedTime;
+}
+
+// Chess clock time helper class
+class Timer {
+  constructor () {
+    this.isRunning = false;
+    this.startTime = 0;
+    this.overallTime = 0;
+  }
+
+  _getTimeElapsedSinceLastStart () {
+    if (!this.startTime) {
+      return 0;
+    }
+
+    return Date.now() - this.startTime;
+  }
+
+  // Start timer
+  start () {
+    if (this.isRunning) {
+      return console.error('Timer is already running');
+    }
+
+    this.isRunning = true;
+
+    this.startTime = Date.now();
+  }
+
+  // Stop timer
+  stop () {
+    if (!this.isRunning) {
+      return console.error('Timer is already stopped');
+    }
+
+    this.isRunning = false;
+
+    this.overallTime = this.overallTime + this._getTimeElapsedSinceLastStart();
+
+  }
+
+  //Reset timer
+  reset () {
+    this.overallTime = 0;
+
+    if (this.isRunning) {
+      this.startTime = Date.now();
+      return;
+    }
+
+    this.startTime = 0;
+  }
+
+  //Get total time elapsed
+  getTimeElapsed () {
+    if (!this.startTime) {
+      return 0;
+    }
+
+    if (this.isRunning) {
+      return this.overallTime + this._getTimeElapsedSinceLastStart();
+    }
+
+    return this.overallTime;
+  }
+
+}
+
+//Initialize white's clock
+const whiteTimer = new Timer();
+setInterval(() => {
+  document.getElementById('whiteTime').innerText = getClockTime(whiteTimer.getTimeElapsed());
+}, 1000)
+
+//Initialize black's clock
+const blackTimer = new Timer();
+setInterval(() => {
+  document.getElementById('blackTime').innerText = getClockTime(blackTimer.getTimeElapsed());
+}, 1000)
+
+// Check if this is a fresh board by comparing current fen to default start fen
+function isNewGame () {
+  return (game.fen() == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+}
+
+function onDragStart (source, piece, position, orientation) {
+  //Alert UCI user is starting the game
+  if(isNewGame()) {
+    $uci.html("ucinewgame")
+    $uci.html(document.getElementById("uci").textContent + " | \n" + "readyok")
+    $uci.html(document.getElementById("uci").textContent + " | \n" + "position startpos")
+  }
+  // do not pick up pieces if the game is over
+  if (game.game_over()) return false
+
+  // only pick up pieces for the side to move
+  if ((game.turn() === 'w' && piece.search(/^b/) !== -1) ||
+      (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
+    return false
+  }
+}
+
+function onDrop (source, target) {
+  // see if the move is legal
+  var move = game.move({
+    from: source,
+    to: target,
+    promotion: 'q' // NOTE: always promote to a queen for example simplicity
+  })
+
+  // illegal move
+  if (move === null) return 'snapback'
+
+  //TODO: api
+
+  updateStatus()
+}
+
+// update the board position after the piece snap
+// for castling, en passant, pawn promotion
+function onSnapEnd () {
+  board.position(game.fen())
+}
+
+function updateStatus () {
+  var status = ''
+
+  var moveColor = 'White'
+
+  if (game.turn() === 'w' && !isNewGame()){
+    blackTimer.stop();
+    whiteTimer.start();
+  }
+
+  if (game.turn() === 'b') {
+    moveColor = 'Black'
+    whiteTimer.stop();
+    blackTimer.start();
+  }
+
+  // checkmate?
+  if (game.in_checkmate()) {
+    blackTimer.stop();
+    whiteTimer.stop();
+    document.getElementById('whiteTimeLabel').innerText = 'Game over, ' + moveColor + ' is in checkmate. White:';
+    status = 'Game over, ' + moveColor + ' is in checkmate.';
+  }
+
+  // draw?
+  else if (game.in_draw()) {
+    blackTimer.stop();
+    whiteTimer.stop();
+    document.getElementById('whiteTimeLabel').innerText = 'Game over, drawn position. White:';
+    status = 'Game over, drawn position';
+  }
+
+  // game still on
+  else {
+    status = moveColor + ' to move'
+
+    // check?
+    if (game.in_check()) {
+        document.getElementById('whiteTimeLabel').innerText = moveColor + ' is in check White:';
+      status += ', ' + moveColor + ' is in check'
+    }
+  }
+
+  $status.html(status)
+  $fen.html(game.fen())
+  $pgn.html(game.pgn())
+
+  if(isNewGame()) {
+  } else {
+    $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
+  }
+}
+
+// Configuration for chess board
+var config = {
+  pieceTheme: '/img/chesspieces/wikipedia/{piece}.png',
+  draggable: true,
+  position: 'start',
+  onDragStart: onDragStart,
+  onDrop: onDrop,
+  onSnapEnd: onSnapEnd
+}
+
+//Initialize chess board
+board = Chessboard('chessBoard', config)
+
+updateStatus()
+
+function resetArena () {
+  blackTimer.reset();
+  whiteTimer.reset();
+  blackTimer.stop();
+  whiteTimer.stop();
+  game.reset();
+  board.start();
+  $status.html(status);
+  $fen.html(game.fen());
+  $pgn.html(game.pgn());
+}
+
+// End current game if user selects new GM
+document.addEventListener('DOMContentLoaded', (event) => {
+    const selectElement = document.getElementById('gmSelector');
+    let previousValue = selectElement.value; // Store the initial value
+
+    selectElement.addEventListener('change', function() {
+
+        // Check that a game is in progress before asking
+        if (!isNewGame()) {
+
+          if (confirm('Are you sure you want to switch opponents and end the current game?')) {
+              // Confirm selected value
+              previousValue = this.value;
+
+              // Reset arena for new game
+              resetArena();
+
+          } else {
+              // User clicked "Cancel", revert the selection to the previous value
+              this.value = previousValue;
+          }
+        }else{
+        //Opponent switched so alert model
+      }
+    });
+});

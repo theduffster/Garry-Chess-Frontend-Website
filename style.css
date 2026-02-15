@@ -1,0 +1,206 @@
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+}
+
+[data-bs-theme=dark] {
+    --bs-body-color: white;
+    --bs-body-bg: black;
+  }
+
+#sideNav{
+  position:absolute;
+  width: 175px;
+  max-height: fit-content;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+}
+
+.dropdown-toggle { outline: 0; }
+
+.nav-flush .nav-link {
+  border-radius: 0;
+}
+
+.btn-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0rem 1.25rem;
+  margin-top: -1rem;
+  background-color: transparent;
+  border: 0;
+  font-weight: 300;
+}
+.btn-toggle:hover,
+.btn-toggle:focus {
+  text-decoration: underline;
+}
+
+
+.btn-toggle[aria-expanded="true"]::before {
+  transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+  display: inline-flex;
+  padding: .1875rem .5rem;
+  margin-top: 0rem;
+  margin-left: 1.25rem;
+  text-decoration: none;
+}
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+  text-decoration: underline;
+}
+
+.scrollarea {
+  overflow-y: auto;
+}
+
+.fw-semibold {
+  font-weight: 600;
+}
+.lh-tight {
+  line-height: 1.25;
+}
+
+#arena {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top:50px;
+  gap: 10px;
+}
+
+#opponentOptions {
+  display: flex;
+  gap: 10px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#createYourOwnURL {
+  white-space:nowrap;
+}
+
+#chessClock {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 16px;
+}
+
+#whiteClock {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+}
+
+#whiteTimeLabel {
+  font-size: 21px;
+  font-weight: 500;
+}
+
+#whiteTime {
+  font-size: 21px;
+  font-weight: 300;
+}
+
+#blackClock {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  margin-left: 5px;
+}
+
+#blackTimeLabel {
+  font-size: 21px;
+  font-weight: 500;
+}
+
+#blackTime {
+  font-size: 21px;
+  font-weight: 300;
+}
+
+#boardStatus {
+  display: none;
+}
+
+#about {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+@media (max-width: 850px) {
+
+  #sideNav{
+    min-width: 300px;
+    height: 50px;
+    padding-top: 1.25rem;
+  }
+
+  #sideNavList{
+    height: 0px;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 50px;
+  }
+
+  .btn-toggle {
+    margin-top: 0rem !important;
+    padding-right: 0;
+  }
+
+  #sideNavChild{
+    width: 0;
+    visibility: hidden;
+  }
+
+  #arena {
+    padding-top:75px;
+  }
+
+  #createYourOwnURL {
+    width: 200px;
+    margin-top: 0px;
+    white-space: normal;
+  }
+
+  #or {
+    margin-top: 15px;
+  }
+
+  #about {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+}
+
+@media (max-width: 500px) {
+
+  #createYourOwnURL {
+    width: 100px;
+    margin-top: 0px;
+    white-space: normal;
+  }
+
+  #or {
+    margin-top: 15px;
+  }
+
+  #about {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+}
