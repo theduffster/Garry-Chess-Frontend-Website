@@ -41,8 +41,6 @@ function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_t
   console.log(gameData)
 
   fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/", {
-      credentials: "same-origin",
-      mode: "same-origin",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: gameData
