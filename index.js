@@ -6,6 +6,65 @@ var $status = $('#status')
 var $fen = $('#fen')
 var $pgn = $('#pgn')
 var $uci = $('#uci')
+var previousFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+var previousWhiteTime = 0;
+var responseData = "";
+var gamdID = "";
+
+function engineConfig (){
+    return JSON.stringify({
+      "limit": JSON.stringify({"type": "time_ms|nodes|depth", "value": 200}),
+      "random_seed": 7
+    });;
+  }
+
+function makeID () {
+      return Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
+    }
+
+function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_type_id,
+  white_ms, black_ms, previous_white_time) {
+
+  const gameData = JSON.stringify({
+    "game_id": game_id,
+    "client_ply": client_ply,
+    "pre_move_fen": pre_move_fen,
+    "client_uci": client_uci,
+    "bot_id": bot_id,
+    "game_type_id": game_type_id,
+    "clock": JSON.stringify({"white_ms": white_ms, "black_ms": black_ms}),
+    "timing": JSON.stringify({"player_move_elapsed_ms": white_ms-previous_white_time}),
+    "engine_config": engineConfig(),
+    "request_id": makeID()
+  });
+
+  console.log(gameData)
+
+  fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/", {
+      credentials: "same-origin",
+      mode: "same-origin",
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: gameData
+  })
+      .then(resp => {
+          if (resp.status === 200) {
+              console.log(resp.json())
+              return resp.json()
+          } else {
+              console.log("Status: " + resp.status)
+              return Promise.reject("server")
+          }
+      })
+      .then(dataJson => {
+          dataReceived = JSON.parse(dataJson)
+      })
+      .catch(err => {
+          if (err === "server") return
+          console.log(err)
+      })
+
+  }
 
 // Formats time from seconds to HH:MM format
 function getClockTime (timeElapsed) {
@@ -116,8 +175,13 @@ function isNewGame () {
 }
 
 function onDragStart (source, piece, position, orientation) {
+  //Fix for drag and drop conflicting with page scroll on mobile
+  document.getElementsByTagName('body')[0].style.overflow = "hidden";
+
   //Alert UCI user is starting the game
   if(isNewGame()) {
+    gameID = makeID();
+
     $uci.html("ucinewgame")
     $uci.html(document.getElementById("uci").textContent + " | \n" + "readyok")
     $uci.html(document.getElementById("uci").textContent + " | \n" + "position startpos")
@@ -133,6 +197,8 @@ function onDragStart (source, piece, position, orientation) {
 }
 
 function onDrop (source, target) {
+  previousFen = game.fen();
+
   // see if the move is legal
   var move = game.move({
     from: source,
@@ -143,8 +209,6 @@ function onDrop (source, target) {
   // illegal move
   if (move === null) return 'snapback'
 
-  //TODO: api
-
   updateStatus()
 }
 
@@ -152,6 +216,9 @@ function onDrop (source, target) {
 // for castling, en passant, pawn promotion
 function onSnapEnd () {
   board.position(game.fen())
+
+  //Fix for drag and drop conflicting with page scroll on mobile
+  document.getElementsByTagName('body')[0].style.overflow = "visible";
 }
 
 function updateStatus () {
@@ -192,7 +259,7 @@ function updateStatus () {
 
     // check?
     if (game.in_check()) {
-        document.getElementById('whiteTimeLabel').innerText = moveColor + ' is in check White:';
+      document.getElementById('whiteTimeLabel').innerText = moveColor + ' is in check White:';
       status += ', ' + moveColor + ' is in check'
     }
   }
@@ -202,9 +269,26 @@ function updateStatus () {
   $pgn.html(game.pgn())
 
   if(isNewGame()) {
+    gameID = makeID();
   } else {
     $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
   }
+
+  console.log(game.history({ verbose: true }))
+
+  jsonPost (
+    gameID,
+    game.history().length,
+    previousFen,
+    game.history({ verbose: true })[game.history().length-1] + game.history({ verbose: true })[game.history().length-1],
+    "carlsen",
+    "gm_carlsen_blitz",
+    whiteTimer.getTimeElapsed(),
+    blackTimer.getTimeElapsed(),
+    previousWhiteTime
+  );
+
+  previousWhiteTime = whiteTimer.getTimeElapsed();
 }
 
 // Configuration for chess board
