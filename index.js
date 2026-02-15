@@ -174,7 +174,7 @@ function isNewGame () {
 
 function onDragStart (source, piece, position, orientation) {
   //Fix for drag and drop conflicting with page scroll on mobile
-  document.getElementsByTagName('body')[0].style.touch-action = "auto";
+  document.getElementsByTagName('body')[0].style.touchaction = "auto";
 
   //Alert UCI user is starting the game
   if(isNewGame()) {
@@ -216,7 +216,7 @@ function onSnapEnd () {
   board.position(game.fen())
 
   //Fix for drag and drop conflicting with page scroll on mobile
-  document.getElementsByTagName('body')[0].style.touch-action = "auto";
+  document.getElementsByTagName('body')[0].style.touchaction = "auto";
 }
 
 function updateStatus () {
