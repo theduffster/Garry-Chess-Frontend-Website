@@ -270,13 +270,11 @@ function updateStatus () {
     $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
   }
 
-  console.log(game.history({ verbose: true }))
-
   jsonPost (
     gameID,
     game.history().length,
     previousFen,
-    game.history({ verbose: true })[game.history().length-1] + game.history({ verbose: true })[game.history().length-1],
+    game.history({ verbose: true })[game.history().length-1].from + game.history({ verbose: true })[game.history().length-1].to,
     "carlsen",
     "gm_carlsen_blitz",
     whiteTimer.getTimeElapsed(),
