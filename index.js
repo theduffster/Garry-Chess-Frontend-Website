@@ -45,8 +45,7 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
         rawPath: "/games",
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Origin": "*"
+          "Content-Type": "application/json"
         },
         body: gameData
     });
