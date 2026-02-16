@@ -20,9 +20,9 @@ function engineConfig (){
 
 function makeID () {
       return Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
-    }
+  }
 
-function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_type_id,
+async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_type_id,
   white_ms, black_ms, previous_white_time) {
 
   const gameData = JSON.stringify({
@@ -40,32 +40,27 @@ function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_t
 
   console.log(gameData)
 
-  fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Origin": "*"
-      },
-      body: gameData
-  })
-      .then(resp => {
-          if (resp.status === 200) {
-              console.log(resp.json())
-              return resp.json()
-          } else {
-              console.log("Status: " + resp.status)
-              return Promise.reject("server")
-          }
-      })
-      .then(dataJson => {
-          dataReceived = JSON.parse(dataJson)
-      })
-      .catch(err => {
-          if (err === "server") return
-          console.log(err)
-      })
+  try {
+      const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Origin": "*"
+        },
+        body: gameData
+    });
 
-  }
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+      const result = await response.json();
+      console.log("RESPONSE:", result);
+
+    } catch (error) {
+      console.error("Error:", error);
+    }
+}
 
 // Formats time from seconds to HH:MM format
 function getClockTime (timeElapsed) {
