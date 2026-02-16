@@ -270,8 +270,6 @@ function updateStatus () {
 
     $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
 
-    console.log(previousFen);
-
     jsonPost (
       gameID,
       game.history().length,
