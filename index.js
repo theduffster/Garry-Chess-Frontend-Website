@@ -42,6 +42,7 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
 
   try {
       const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
+        rawPath: "/games",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -219,6 +220,7 @@ function updateStatus () {
   var status = ''
 
   var moveColor = 'White'
+  document.getElementById('whiteTimeLabel').innerText = 'White:';
 
   if (game.turn() === 'w' && !isNewGame()){
     blackTimer.stop();
