@@ -40,9 +40,12 @@ function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, game_t
 
   console.log(gameData)
 
-  fetch("Access-Control-Allow-Origin", "https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
+  fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Origin": "*"
+      },
       body: gameData
   })
       .then(resp => {
@@ -266,21 +269,25 @@ function updateStatus () {
 
   if(isNewGame()) {
     gameID = makeID();
-  } else {
-    $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
-  }
+    var previousFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
-  jsonPost (
-    gameID,
-    game.history().length,
-    previousFen,
-    game.history({ verbose: true })[game.history().length-1].from + game.history({ verbose: true })[game.history().length-1].to,
-    "carlsen",
-    "gm_carlsen_blitz",
-    whiteTimer.getTimeElapsed(),
-    blackTimer.getTimeElapsed(),
-    previousWhiteTime
-  );
+  } else {
+
+    $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
+
+    jsonPost (
+      gameID,
+      game.history().length,
+      previousFen,
+      game.history({ verbose: true })[game.history().length-1].from + game.history({ verbose: true })[game.history().length-1].to,
+      "carlsen",
+      "gm_carlsen_blitz",
+      whiteTimer.getTimeElapsed(),
+      blackTimer.getTimeElapsed(),
+      previousWhiteTime
+    );
+
+  }
 
   previousWhiteTime = whiteTimer.getTimeElapsed();
 }
