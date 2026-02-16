@@ -173,8 +173,6 @@ function isNewGame () {
 }
 
 function onDragStart (source, piece, position, orientation) {
-  //Fix for drag and drop conflicting with page scroll on mobile
-  document.getElementById("chessBoard").style.touchAction = "none";
 
   //Alert UCI user is starting the game
   if(isNewGame()) {
@@ -207,7 +205,6 @@ function onDrop (source, target) {
   // illegal move
   if (move === null) return 'snapback'
 
-  document.getElementById("chessBoard").style.touchAction = "none";
   updateStatus()
 }
 
