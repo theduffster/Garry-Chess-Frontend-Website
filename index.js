@@ -41,8 +41,7 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
   console.log(gameData)
 
   try {
-      const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws", {
-        rawPath: "/games",
+      const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/games", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
