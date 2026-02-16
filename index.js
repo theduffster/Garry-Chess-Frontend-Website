@@ -264,11 +264,13 @@ function updateStatus () {
 
   if(isNewGame()) {
     gameID = makeID();
-    var previousFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    previousFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
   } else {
 
     $uci.html(document.getElementById("uci").textContent + " | \n" + "position fen " + game.fen())
+
+    console.log(previousFen);
 
     jsonPost (
       gameID,
