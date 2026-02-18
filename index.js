@@ -44,20 +44,22 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
       const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/games", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
         body: gameData
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      throw new Error(`POST failed: ${response.status} ${response.statusText}`);
     }
 
       const result = await response.json();
       console.log("RESPONSE:", result);
 
     } catch (error) {
-      console.error("Error:", error);
+      console.error('POST JSON error:', error.message);
+      throw error;
     }
 }
 
