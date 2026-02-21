@@ -12,7 +12,7 @@ var responseData = "";
 var gamdID = "";
 
 var engineConfigValue = 200;
-var engineConfigRandomSeed = 7:
+var engineConfigRandomSeed = 7;
 
 function makeID () {
       return Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
