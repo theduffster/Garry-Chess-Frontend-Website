@@ -13,7 +13,7 @@ var gamdID = "";
 
 function engineConfig (){
     return JSON.stringify({
-      limit: JSON.stringify({type: time_ms|nodes|depth, value: 200}),
+      limit: JSON.stringify({type: "time_ms|nodes|depth", value: 200}),
       random_seed: 7
     });;
   }
@@ -26,19 +26,19 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
   white_ms, black_ms, previous_white_time) {
 
   const gameData = JSON.stringify({
-    "game_id": game_id,
-    "client_ply": client_ply,
-    "pre_move_fen": pre_move_fen,
-    "client_uci": client_uci,
-    "bot_id": bot_id,
-    "game_type_id": game_type_id,
-    "clock": JSON.stringify({white_ms: white_ms, black_ms: black_ms}),
-    "timing": JSON.stringify({player_move_elapsed_ms: white_ms-previous_white_time}),
-    "engine_config": engineConfig(),
-    "request_id": makeID()
+    game_id: game_id,
+    client_ply: client_ply,
+    pre_move_fen: pre_move_fen,
+    client_uci: client_uci,
+    bot_id: bot_id,
+    game_type_id: game_type_id,
+    clock: JSON.stringify({white_ms: white_ms, black_ms: black_ms}),
+    timing: JSON.stringify({player_move_elapsed_ms: white_ms-previous_white_time}),
+    engine_config: engineConfig(),
+    request_id: makeID()
   });
 
-  console.log(JSON.stringify({"body": gameData}));
+  console.log(JSON.stringify({body: gameData}));
 
   try {
       const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/games", {
