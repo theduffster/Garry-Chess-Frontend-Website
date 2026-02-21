@@ -11,12 +11,8 @@ var previousWhiteTime = 0;
 var responseData = "";
 var gamdID = "";
 
-function engineConfig (){
-    return JSON.stringify({
-      limit: JSON.stringify({type: "time_ms|nodes|depth", value: 200}),
-      random_seed: 7
-    });;
-  }
+var engineConfigValue = 200;
+var engineConfigRandomSeed = 7:
 
 function makeID () {
       return Date.now().toString(36) + Math.random().toString(36).substring(2, 12).padStart(12, 0);
@@ -32,9 +28,9 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
     client_uci: client_uci,
     bot_id: bot_id,
     game_type_id: game_type_id,
-    clock: JSON.stringify({white_ms: white_ms, black_ms: black_ms}),
-    timing: JSON.stringify({player_move_elapsed_ms: white_ms-previous_white_time}),
-    engine_config: engineConfig(),
+    clock: {white_ms: white_ms, black_ms: black_ms},
+    timing: {player_move_elapsed_ms: white_ms-previous_white_time},
+    engine_config: { limit: {type: "time_ms|nodes|depth", value: engineConfigValue}, random_seed: engineConfigRandomSeed},
     request_id: makeID()
   });
 
