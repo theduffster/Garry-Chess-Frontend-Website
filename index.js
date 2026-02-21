@@ -38,7 +38,7 @@ async function jsonPost (game_id, client_ply, pre_move_fen, client_uci, bot_id, 
     "request_id": makeID()
   });
 
-  console.log({"body": gameData)});
+  console.log(JSON.stringify({"body": gameData}));
 
   try {
       const response = await fetch("https://5izgyd4swtmerhxcwxqgvysmeu0vuodu.lambda-url.us-east-1.on.aws/games", {
